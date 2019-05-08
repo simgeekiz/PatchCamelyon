@@ -12,6 +12,7 @@ entrypoints==0.3
 future==0.17.1
 gast==0.2.2
 get==2018.11.19
+google-pasta==0.1.5
 grpcio==1.18.0
 h5py==2.9.0
 idna==2.8
@@ -38,6 +39,7 @@ nbconvert==5.4.0
 nbformat==4.4.0
 notebook==5.7.4
 numpy==1.16.1
+opencv-python==4.1.0.25
 pandocfilters==1.4.2
 parso==0.3.2
 pexpect==4.6.0
@@ -66,11 +68,15 @@ Send2Trash==1.5.0
 SimpleITK==1.2.0
 six==1.12.0
 sklearn==0.0
+spams==2.6.1
+tb-nightly==1.14.0a20190507
 tensorboard==1.12.2
 tensorflow==1.12.0
 termcolor==1.1.0
 terminado==0.8.1
 testpath==0.4.2
+tf-estimator-nightly==1.14.0.dev2019050701
+tf-nightly-gpu==1.14.1.dev20190507
 tornado==5.1.1
 tqdm==4.30.0
 traitlets==4.3.2
@@ -79,3 +85,4 @@ wcwidth==0.1.7
 webencodings==0.5.1
 Werkzeug==0.14.1
 widgetsnbextension==3.4.2
+wrapt==1.11.1
