@@ -5,6 +5,7 @@ __pycache__/
 .ipynb_checkpoints
 
 #Directories 
+Stain_Normalization/
 stainnorm/
 data/
 Data/
