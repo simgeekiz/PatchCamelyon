@@ -10,8 +10,6 @@ from tqdm import tqdm
 import stain_utils as stu
 from keras.utils import HDF5Matrix
 
-from utils.load_data import load_data
-
 def get_chunks(dlen, csize=10000):
     chunks = [(i*csize, (i+1)*csize) for i in range(int(dlen/csize))] 
     if dlen > (int(dlen/csize)*csize):
@@ -23,7 +21,6 @@ if __name__=="__main__":
     normalizer = 'macenko'
     
     data_dir = '../data/'
-    limit = None
     csize = 10000
     
     if normalizer == 'macenko':
@@ -44,9 +41,12 @@ if __name__=="__main__":
 
     n = normParam.Normalizer()
 
-    first, x_train = x_train[0], x_train[1:]
+    first_x = x_train[10]
+    first_y = y_train[10]
+    x_train = np.delete(x_train, 10, 0)
+    y_train = np.delete(y_train, 10, 0)
 
-    n.fit(first)
+    n.fit(first_x)
     
     for frst, lst in get_chunks(len(x_train), csize):
         
@@ -67,7 +67,7 @@ if __name__=="__main__":
                 norm_x = n.transform(x_)
             except Exception as e:
                 logf.write(str(i) + '; ' + str(e) + '\n')
-                y_train = np.delete(y_train, i+1, 0)
+                y_train = np.delete(y_train, i, 0)
                 continue
 
             t = t + (norm_x,)
@@ -75,12 +75,14 @@ if __name__=="__main__":
         logf.close()
         
         if frst == 0:
-            bs_inputs = (first,) + t
+            print("DEBUG: Adding the first elements to the arrays")
+            bs_inputs = (first_x,) + t
+            y_train = np.concatenate((np.array([first_y]), y_train))
         else:
             bs_inputs = t
 
         x_train = stu.build_stack(bs_inputs)
-
+        
         print("Writing train to h5.gz files")
 
         h5f = h5py.File(os.path.join(data_dir, normalizer + '/camelyonpatch_level_2_split_train_x_' + normalizer + '_' + str(frst) + '_' + str(lst) + '.h5.gz'), 'w')
@@ -114,13 +116,13 @@ if __name__=="__main__":
         logf = open('./logs/' + normalizer + '_' + str(frst) + '_' + str(lst) + '_valid_skipped.txt', 'w')
 
         t = () 
-        for i, x_ in enumerate(tqdm(x_valid)):
+        for i, x_ in enumerate(x_valid):
             norm_x = None
             try:
                 norm_x = n.transform(x_)
             except Exception as e:
                 logf.write(str(i) + '; ' + str(e) + '\n')
-                y_valid = np.delete(y_valid, i+1, 0)
+                y_valid = np.delete(y_valid, i, 0)
                 continue
 
             t = t + (norm_x,)
@@ -145,37 +147,38 @@ if __name__=="__main__":
     
     #################### TEST ####################
     
-#     print("Loading data with purpose=test")
+    print("Loading data with purpose=test")
     
-#     x_test, y_test = load_data(data_dir, purpose='test', limit=limit)
+    x_test = HDF5Matrix(gzip.open(os.path.join(data_dir, 'camelyonpatch_level_2_split_test_x.h5.gz'), 'rb'), 'x')
+    y_test = HDF5Matrix(gzip.open(os.path.join(data_dir, 'camelyonpatch_level_2_split_test_y.h5.gz'), 'rb'), 'y')
     
-#     print("Normalizing test")
+    print("Normalizing test")
 
-#     logf = open('./logs/' + normalizer + '_test_skipped.txt', 'w')
+    logf = open('./logs/' + normalizer + '_test_skipped.txt', 'w')
     
-#     t = () 
-#     for i, x_ in enumerate(tqdm(x_test)):
-#         norm_x = None
-#         try:
-#             norm_x = n.transform(x_)
-#         except Exception as e:
-#             logf.write(str(i) + '; ' + str(e) + '\n')
-#             norm_x = x_
+    t = () 
+    for i, x_ in enumerate(x_test):
+        norm_x = None
+        try:
+            norm_x = n.transform(x_)
+        except Exception as e:
+            logf.write(str(i) + '; ' + str(e) + '\n')
+            norm_x = x_
 
-#         t = t + (norm_x,)
+        t = t + (norm_x,)
         
-#     logf.close()
+    logf.close()
     
-#     x_test = stu.build_stack(t)
+    x_test = stu.build_stack(t)
     
-#     print("Writing test to h5.gz files")
+    print("Writing test to h5.gz files")
     
-#     h5f = h5py.File(os.path.join(data_dir, 'camelyonpatch_level_2_split_test_x_' + normalizer + '.h5.gz'), 'w')
-#     h5f.create_dataset('x', data=x_test, compression='gzip')
-#     h5f.close()
+    h5f = h5py.File(os.path.join(data_dir, normalizer + '/camelyonpatch_level_2_split_test_x_' + normalizer + '.h5.gz'), 'w')
+    h5f.create_dataset('x', data=x_test, compression='gzip')
+    h5f.close()
     
-#     h5f = h5py.File(os.path.join(data_dir, 'camelyonpatch_level_2_split_test_y_' + normalizer + '.h5.gz'), 'w')
-#     h5f.create_dataset('y', data=y_test, compression='gzip')
-#     h5f.close()
+    h5f = h5py.File(os.path.join(data_dir, normalizer + '/camelyonpatch_level_2_split_test_y_' + normalizer + '.h5.gz'), 'w')
+    h5f.create_dataset('y', data=y_test, compression='gzip')
+    h5f.close()
     
     
