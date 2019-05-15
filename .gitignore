@@ -5,6 +5,9 @@ __pycache__/
 .ipynb_checkpoints
 
 #Directories
+VGG16-ESv.*
+VGG16-ESv.ipynb
+data-servers/
 Preds/
 Stain_Normalization/
 stainnorm/
