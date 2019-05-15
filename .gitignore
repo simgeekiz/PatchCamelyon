@@ -4,7 +4,8 @@ __pycache__/
 *$py.class
 .ipynb_checkpoints
 
-#Directories 
+#Directories
+Preds/
 stainnorm/
 data/
 Data/
@@ -143,4 +144,3 @@ venv.bak/
 
 # mypy
 .mypy_cache/
-
