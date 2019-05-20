@@ -2,6 +2,7 @@ import time
 from keras.callbacks import Callback
 import matplotlib.pyplot as plt
 from IPython import display
+import os
 
 
 class TimerCallback(Callback):
@@ -76,6 +77,10 @@ class TimerCallback(Callback):
 class PlotCurves(Callback):
     # Callback: PlotCurves
     # plot losses and accuracy after each epoch and save the weights of the best model
+    
+    def __init__(self, model_name):
+        self.model_name = model_name
+        
     def on_train_begin(self, logs={}):
         self.epoch = 0
         self.best_epoch = 0
@@ -106,17 +111,17 @@ class PlotCurves(Callback):
         self.val_auc.append(logs.get('val_auc'))
         self.epoch += 1
         
-        # (Possibly) update best validation accuracy and save the network
+       # (Possibly) update best validation accuracy and save the network
         if self.val_acc[-1] > self.best_val_acc:
             self.best_val_acc = self.val_acc[-1]
             self.best_epoch = self.epoch
-#             self.model.save_weights(os.path.join(file_dir, 'best_acc_model.h5'))
+            self.model.save_weights(os.path.join('./Model/weights', self.model_name + 'best_acc_model.h5'))
             
         # (Possibly) update best validation AUC and save the network
         if self.val_auc[-1] > self.best_val_auc:
             self.best_val_auc = self.val_auc[-1]
             self.best_auc_epoch = self.epoch
-#             self.model.save_weights(os.path.join(file_dir, 'best_auc_model.h5'))
+            self.model.save_weights(os.path.join('./Model/weights', self.model_name + 'best_auc_model.h5'))
         
         display.clear_output(wait=True)
         plt.plot(self.x, self.losses, label="loss")

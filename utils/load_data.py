@@ -24,10 +24,13 @@ def load_data(data_dir, purpose='train', limit=None, val_limit=None, norm=None):
         x_valid = HDF5Matrix(pc_valid_x_h5, 'x')
         y_valid = HDF5Matrix(pc_valid_y_h5, 'y')
         
+        if norm and (not limit or limit > x_train.shape[0]):
+            limit = x_train.shape[0]
+        
         if not val_limit and limit:
             val_limit = limit
         
-        if limit and limit<len(x_train):
+        if limit:
             x_train = x_train[:limit]
             y_train = y_train[:limit]
         
@@ -48,8 +51,11 @@ def load_data(data_dir, purpose='train', limit=None, val_limit=None, norm=None):
 
         x_test = HDF5Matrix(pc_test_x_h5, 'x')
         y_test = HDF5Matrix(pc_test_y_h5, 'y')
+        
+        if norm and (not limit or limit > x_test.shape[0]):
+            limit = x_test.shape[0]
 
-        if limit and limit<len(x_test):
+        if limit:
             x_test = x_test[:limit]
             y_test = y_test[:limit]
         

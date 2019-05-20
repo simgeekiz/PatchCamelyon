@@ -50,6 +50,9 @@ class DataGenerator(keras.utils.Sequence):
         # Initialization
         X = np.empty((self.batch_size, *self.dim, self.n_channels))
         y = np.empty((self.batch_size, self.n_classes))
+        
+        # printing the progress
+#         print(str(int((int(list_IDs_temp[0])/len(self.list_IDs))*100)) + '%')
 
         # Generate data
         for i, ID in enumerate(list_IDs_temp):
