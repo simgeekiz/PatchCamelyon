@@ -4,14 +4,14 @@ import numpy as np
 from scipy.ndimage.interpolation import map_coordinates
 from scipy.ndimage.filters import gaussian_filter
 from PIL import Image, ImageFilter, ImageEnhance 
-from random import sample, getrandbits
+import random
 
 mean = 0
 var = 10
 sigma = 0.1
 
 def mirroring(image):
-    a = getrandbits(2)
+    a = random.getrandbits(2)
     if a == 3:
         im_aug = np.fliplr(np.flipud(image))
     elif a == 2:
@@ -73,7 +73,7 @@ def Augmentation(image, rot=[0, 90], elast_a=[80, 120], elast_sig=[9.0 , 11.0], 
     if random.getrandbits(1) > 0:
         # random rotation
         im = Image.fromarray(image)
-        angle = sample(rot, 1)        
+        angle = random.sample(rot, 1)        
         im = im.rotate(angle[0])
         im = np.array(im)
     else:

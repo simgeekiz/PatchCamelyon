@@ -5,7 +5,8 @@ from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_a
 from keras.utils import to_categorical
 from PIL import Image
 from random import sample, getrandbits
-from Augmentation import Augmentation
+from .Augmentation import Augmentation
+import random
 
 #Data Generator to efficiently load and preprocess data for training the classifier
 
