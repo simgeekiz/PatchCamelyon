@@ -1,9 +1,11 @@
 import keras
 import numpy as np
 from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array
-from keras.applications.mobilenet import preprocess_input
+# from keras.applications.mobilenet import preprocess_input
 from keras.utils import to_categorical
 from PIL import Image
+from random import sample, getrandbits
+from Augmentation import Augmentation
 
 #Data Generator to efficiently load and preprocess data for training the classifier
 
@@ -62,7 +64,14 @@ class DataGenerator(keras.utils.Sequence):
             img = img.resize((224,224), Image.ANTIALIAS)
             img.load()
             
-            X[i] = preprocess_input(np.asarray(img, dtype=np.uint8))
+            if random.getrandbits(1) < 1 :
+                
+            
+                X[i] = np.asarray(img, dtype=np.uint8)/255
+            
+            else :
+            
+                X[i] = Augmentation(np.asarray(img, dtype=np.uint8))
 
             # Store target label(one-hot-encoding)
             y[i] = to_categorical(self.labels[str(ID)], num_classes=self.n_classes)
