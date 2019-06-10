@@ -22,5 +22,5 @@ pip install opencv-python --user
 pip install scikit-image --user
 #module load gcc/4.9.2
 
-ssh -o StrictHostKeyChecking=no -f -N -p 22 -R 5114:localhost:5114 int3
-jupyter notebook --no-browser --port 5114
+ssh -o StrictHostKeyChecking=no -f -N -p 22 -R 5045:localhost:5045 int3
+jupyter notebook --no-browser --port 5045
