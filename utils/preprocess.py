@@ -59,7 +59,7 @@ class DataGenerator(keras.utils.Sequence):
         # printing the progress
 #         print(str(int((int(list_IDs_temp[0])/len(self.list_IDs))*100)) + '%')
         if self.aug:
-            if random.getrandbits(1) < 1 :
+            if random.getrandbits(1) < 1:
                 # Generate batch non-augmented
                 for i, ID in enumerate(list_IDs_temp):
                     # preprocessing

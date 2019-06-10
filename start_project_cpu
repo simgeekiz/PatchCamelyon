@@ -1,0 +1,26 @@
+#!/bin/bash
+#SBATCH -t 14:00:00
+#SBATCH -N 1 -c 32
+#SBATCH -p broadwell
+module load python/3.5.2
+pip uninstall tensorflow
+pip install https://storage.googleapis.com/intel-optimized-tensorflow/tensorflow-1.11.0-cp35-cp35m-linux_x86_64.whl --user
+pip install keras --user
+pip install tqdm --user
+pip install requests --user
+pip install Pillow --user
+
+
+#pip uninstall -y tensorflow
+#pip uninstall keras
+#pip install tensorflow-gpu==1.14 --user
+#pip install keras==2.1.3 --user
+#pip install tqdm --user
+#pip install requests --user
+pip install opencv-python --user
+#pip install Pillow --user
+pip install scikit-image --user
+#module load gcc/4.9.2
+
+ssh -o StrictHostKeyChecking=no -f -N -p 22 -R 5114:localhost:5114 int3
+jupyter notebook --no-browser --port 5114

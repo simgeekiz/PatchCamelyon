@@ -5,6 +5,8 @@ __pycache__/
 .ipynb_checkpoints
 
 #Directories
+core.*
+slurm*
 VGG16-ESv.*
 VGG16-ESv.ipynb
 data-servers/

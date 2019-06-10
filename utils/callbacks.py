@@ -111,17 +111,25 @@ class PlotCurves(Callback):
         self.val_auc.append(logs.get('val_auc'))
         self.epoch += 1
         
+        model_dir = './Model/' + self.model_name
+        os.makedirs(model_dir, exist_ok=True)
+
+        weights_dir = os.path.join(model_dir, 'weights')
+        os.makedirs(weights_dir, exist_ok=True)
+        
+        self.model.save(os.path.join(model_dir, self.model_name + '_epoch_' + str(self.epoch) + '.h5'))
+        
        # (Possibly) update best validation accuracy and save the network
         if self.val_acc[-1] > self.best_val_acc:
             self.best_val_acc = self.val_acc[-1]
             self.best_epoch = self.epoch
-            self.model.save_weights(os.path.join('./Model/weights', self.model_name + 'best_acc_model.h5'))
+            self.model.save_weights(os.path.join(weights_dir, self.model_name + '_best_acc_model_weights.h5'))
             
         # (Possibly) update best validation AUC and save the network
         if self.val_auc[-1] > self.best_val_auc:
             self.best_val_auc = self.val_auc[-1]
             self.best_auc_epoch = self.epoch
-            self.model.save_weights(os.path.join('./Model/weights', self.model_name + 'best_auc_model.h5'))
+            self.model.save_weights(os.path.join(weights_dir, self.model_name + '_best_auc_model_weights.h5'))
         
         display.clear_output(wait=True)
         plt.plot(self.x, self.losses, label="loss")
