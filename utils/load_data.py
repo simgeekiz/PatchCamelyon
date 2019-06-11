@@ -2,10 +2,10 @@ import os
 import gzip
 from keras.utils import HDF5Matrix
 
-def load_data(data_dir, purpose='train', limit=None, val_limit=None, norm=None):
+def load_data(data_dir, purpose='train', limit=None, val_limit=None, norm=None, is_gzip=False):
 
     norm = '_' + norm if norm else ''
-    gz = '.gz' if norm else ''
+    gz = '.gz' if norm or is_gzip else ''
     
     if purpose == 'train':     
         
@@ -14,11 +14,11 @@ def load_data(data_dir, purpose='train', limit=None, val_limit=None, norm=None):
         pc_valid_y_h5 = os.path.join(data_dir, 'camelyonpatch_level_2_split_valid_y' + norm + '.h5' + gz)
         pc_valid_x_h5 = os.path.join(data_dir, 'camelyonpatch_level_2_split_valid_x' + norm + '.h5' + gz) 
         
-#         if not norm:
-#             pc_train_x_h5 = gzip.open(pc_train_x_h5, 'rb')
-#             pc_train_y_h5 = gzip.open(pc_train_y_h5, 'rb')
-#             pc_valid_y_h5 = gzip.open(pc_valid_y_h5, 'rb')
-#             pc_valid_x_h5 = gzip.open(pc_valid_x_h5, 'rb')
+        if is_gzip and not norm:
+            pc_train_x_h5 = gzip.open(pc_train_x_h5, 'rb')
+            pc_train_y_h5 = gzip.open(pc_train_y_h5, 'rb')
+            pc_valid_y_h5 = gzip.open(pc_valid_y_h5, 'rb')
+            pc_valid_x_h5 = gzip.open(pc_valid_x_h5, 'rb')
         
         x_train = HDF5Matrix(pc_train_x_h5, 'x')
         y_train = HDF5Matrix(pc_train_y_h5, 'y')
@@ -46,9 +46,9 @@ def load_data(data_dir, purpose='train', limit=None, val_limit=None, norm=None):
         pc_test_x_h5 = os.path.join(data_dir, 'camelyonpatch_level_2_split_test_x' + norm + '.h5' + gz) 
         pc_test_y_h5 = os.path.join(data_dir, 'camelyonpatch_level_2_split_test_y' + norm + '.h5' + gz) 
         
-#         if not norm:
-#             pc_test_x_h5 = gzip.open(pc_test_x_h5, 'rb')
-#             pc_test_y_h5 = gzip.open(pc_test_y_h5, 'rb')
+        if is_gzip and not norm:
+            pc_test_x_h5 = gzip.open(pc_test_x_h5, 'rb')
+            pc_test_y_h5 = gzip.open(pc_test_y_h5, 'rb')
 
         x_test = HDF5Matrix(pc_test_x_h5, 'x')
         y_test = HDF5Matrix(pc_test_y_h5, 'y')

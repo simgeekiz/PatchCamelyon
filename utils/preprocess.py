@@ -99,3 +99,31 @@ class DataGenerator(keras.utils.Sequence):
                 # Store target label(one-hot-encoding)
                 y[i] = to_categorical(self.labels[str(ID)], num_classes=self.n_classes)
         return X, y
+    
+def multiple_batch_generator(generator_num, **kwargs):
+    """A generator to work with multiple inputs models
+    
+    We create a model with a list of multiple input layers when 
+    we use :func:`keras.layers.concatenate`. However,
+    :class:`batch_generator.BatchGenerator` returns a single tuple 
+    with two arrays, which does not fit to a model with a multiple 
+    input layers. Thus, with this generator, we create the necessary 
+    input for such models.
+    
+    Arguments:
+        generator_num {int} -- number of generators should be created
+        \**kwargs -- See :class:`batch_generator.BatchGenerator`
+        
+    Yields:
+        ([ndarray,...,ndarray], ndarray) -- in the tuple; list contains feature arrays from each generator, array out of the list contains the label set
+    """
+    #generators_list = [BatchGenerator(**kwargs, shuffle=False) for i in range(generator_num)]
+    gen = DataGenerator(**kwargs, shuffle=False)
+    
+    i = 0
+#     while i < gen.__len__():
+    while True:
+        nx = gen.__getitem__(i)
+        Xy_list = [nx]*generator_num
+        i += 1
+        yield [Xy[0] for Xy in Xy_list], Xy_list[0][1]

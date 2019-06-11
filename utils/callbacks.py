@@ -105,10 +105,10 @@ class PlotCurves(Callback):
         self.x.append(self.epoch)
         self.losses.append(logs.get('loss'))
         self.acc.append(logs.get('acc'))
-        self.auc.append(logs.get('auc'))
+#         self.auc.append(logs.get('auc'))
         self.val_losses.append(logs.get('val_loss'))
         self.val_acc.append(logs.get('val_acc'))
-        self.val_auc.append(logs.get('val_auc'))
+#         self.val_auc.append(logs.get('val_auc'))
         self.epoch += 1
         
         model_dir = './Model/' + self.model_name
@@ -126,22 +126,24 @@ class PlotCurves(Callback):
             self.model.save_weights(os.path.join(weights_dir, self.model_name + '_best_acc_model_weights.h5'))
             
         # (Possibly) update best validation AUC and save the network
-        if self.val_auc[-1] > self.best_val_auc:
-            self.best_val_auc = self.val_auc[-1]
-            self.best_auc_epoch = self.epoch
-            self.model.save_weights(os.path.join(weights_dir, self.model_name + '_best_auc_model_weights.h5'))
+#         if self.val_auc[-1] > self.best_val_auc:
+#             self.best_val_auc = self.val_auc[-1]
+#             self.best_auc_epoch = self.epoch
+#             self.model.save_weights(os.path.join(weights_dir, self.model_name + '_best_auc_model_weights.h5'))
         
         display.clear_output(wait=True)
         plt.plot(self.x, self.losses, label="loss")
         plt.plot(self.x, self.val_losses, label="val_loss")
         plt.plot(self.x, self.acc, label="acc")
         plt.plot(self.x, self.val_acc, label="val_acc")
-        plt.plot(self.x, self.auc, label="auc")
-        plt.plot(self.x, self.val_auc, label="val_auc")
+#         plt.plot(self.x, self.auc, label="auc")
+#         plt.plot(self.x, self.val_auc, label="val_auc")
         plt.legend()
-        plt.title('Best validation accuracy = {:.2f}% on epoch {} of {} \n' \
-                  'Best validation AUC = {:.2f}% on epoch {} of {}'.format(
-                        100. * self.best_val_acc, self.best_epoch, self.epoch,
-                        100. * self.best_val_auc, self.best_auc_epoch, self.epoch))
+#         plt.title('Best validation accuracy = {:.2f}% on epoch {} of {} \n' \
+#                   'Best validation AUC = {:.2f}% on epoch {} of {}'.format(
+#                         100. * self.best_val_acc, self.best_epoch, self.epoch,
+#                         100. * self.best_val_auc, self.best_auc_epoch, self.epoch))
+        plt.title('Best validation accuracy = {:.2f}% on epoch {} of {}'.format(
+                        100. * self.best_val_acc, self.best_epoch, self.epoch))
         plt.show();
         
