@@ -123,13 +123,13 @@ class PlotCurves(Callback):
         if self.val_acc[-1] > self.best_val_acc:
             self.best_val_acc = self.val_acc[-1]
             self.best_epoch = self.epoch
-            self.model.save_weights(os.path.join(weights_dir, self.model_name + '_best_acc_model_weights.h5'))
+            self.model.save_weights(os.path.join(weights_dir, self.model_name + '_best_acc_model_weights' + '_epoch_' + str(self.epoch) + '.h5'))
             
         # (Possibly) update best validation AUC and save the network
         if self.val_auc[-1] > self.best_val_auc:
             self.best_val_auc = self.val_auc[-1]
             self.best_auc_epoch = self.epoch
-            self.model.save_weights(os.path.join(weights_dir, self.model_name + '_best_auc_model_weights.h5'))
+            self.model.save_weights(os.path.join(weights_dir, self.model_name + '_best_auc_model_weights' + '_epoch_' + str(self.epoch) + '.h5'))
         
         display.clear_output(wait=True)
         plt.plot(self.x, self.losses, label="loss")
