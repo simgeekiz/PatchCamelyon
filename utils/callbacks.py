@@ -1,4 +1,5 @@
 import time
+import pickle
 from keras.callbacks import Callback
 import matplotlib.pyplot as plt
 from IPython import display
@@ -70,16 +71,14 @@ class TimerCallback(Callback):
             if self.on_interrupt is not None:
                 self.on_interrupt(self.model, self.elapsedTime)
                 
-                
-                
-                
 
 class PlotCurves(Callback):
     # Callback: PlotCurves
     # plot losses and accuracy after each epoch and save the weights of the best model
     
-    def __init__(self, model_name):
+    def __init__(self, model_name, weights2pickle=False):
         self.model_name = model_name
+        self.weights2pickle = weights2pickle
         
     def on_train_begin(self, logs={}):
         self.epoch = 0
@@ -117,19 +116,24 @@ class PlotCurves(Callback):
         weights_dir = os.path.join(model_dir, 'weights')
         os.makedirs(weights_dir, exist_ok=True)
         
-        self.model.save(os.path.join(model_dir, self.model_name + '_epoch_' + str(self.epoch) + '.h5'))
-        
-       # (Possibly) update best validation accuracy and save the network
-        if self.val_acc[-1] > self.best_val_acc:
-            self.best_val_acc = self.val_acc[-1]
-            self.best_epoch = self.epoch
-            self.model.save_weights(os.path.join(weights_dir, self.model_name + '_best_acc_model_weights.h5'))
-            
-        # (Possibly) update best validation AUC and save the network
-        if self.val_auc[-1] > self.best_val_auc:
-            self.best_val_auc = self.val_auc[-1]
-            self.best_auc_epoch = self.epoch
-            self.model.save_weights(os.path.join(weights_dir, self.model_name + '_best_auc_model_weights.h5'))
+        if self.weights2pickle:
+            mwghts = self.model.get_weights()
+            with open(os.path.join(model_dir, self.model_name + '_weights_epoch_' + str(self.epoch) + '.pkl'), 'wb') as pkl:
+                pickle.dump(mwghts, pkl, protocol= pickle.HIGHEST_PROTOCOL)
+        else:
+            self.model.save(os.path.join(model_dir, self.model_name + '_epoch_' + str(self.epoch) + '.h5'))
+
+           # (Possibly) update best validation accuracy and save the network
+            if self.val_acc[-1] > self.best_val_acc:
+                self.best_val_acc = self.val_acc[-1]
+                self.best_epoch = self.epoch
+                self.model.save_weights(os.path.join(weights_dir, self.model_name + '_best_acc_model_weights' + '_epoch_' + str(self.epoch) + '.h5'))
+
+            # (Possibly) update best validation AUC and save the network
+            if self.val_auc[-1] > self.best_val_auc:
+                self.best_val_auc = self.val_auc[-1]
+                self.best_auc_epoch = self.epoch
+                self.model.save_weights(os.path.join(weights_dir, self.model_name + '_best_auc_model_weights' + '_epoch_' + str(self.epoch) + '.h5'))
         
         display.clear_output(wait=True)
         plt.plot(self.x, self.losses, label="loss")

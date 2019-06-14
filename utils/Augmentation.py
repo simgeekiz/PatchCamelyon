@@ -80,7 +80,7 @@ def Augmentation(image, rot=[0, 90], elast_a=[80, 120], elast_sig=[9.0 , 11.0], 
         im = image
     
     #### Group 2: Morphologic -> Elestic deformation,  gaussian noise or gaussian blurring ####
-    t = random.randint(0,3)
+    t = random.randint(0,2)
     if t == 0:
         # random elastic trasform
         a = np.random.uniform(low=elast_a[0], high=elast_a[1], size=1)[0]
@@ -90,12 +90,12 @@ def Augmentation(image, rot=[0, 90], elast_a=[80, 120], elast_sig=[9.0 , 11.0], 
         # random gaussian noise
         sigma = np.random.uniform(low=g_noise[0], high=g_noise[1], size=1)[0]
         im = gaussian_noise(im, sigma)
-    elif t == 2:
-        # random gaussian blurring
-        sigma = np.random.uniform(low=g_blurr[0], high=g_blurr[1], size=1)[0]
-        im = Image.fromarray(im)
-        im = im.filter(ImageFilter.GaussianBlur(sigma))
-        im = np.array(im)
+#     elif t == 2:
+#         # random gaussian blurring
+#         sigma = np.random.uniform(low=g_blurr[0], high=g_blurr[1], size=1)[0]
+#         im = Image.fromarray(im)
+#         im = im.filter(ImageFilter.GaussianBlur(sigma))
+#         im = np.array(im)
         
     #### Group 3: Brightness or Contrast ####
     t = random.randint(0,2)
