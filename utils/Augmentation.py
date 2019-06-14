@@ -11,15 +11,13 @@ var = 10
 sigma = 0.1
 
 def mirroring(image):
-    a = random.getrandbits(2)
-    if a == 3:
+    a = random.randint(0,2)
+    if a == 0:
         im_aug = np.fliplr(np.flipud(image))
-    elif a == 2:
-        im_aug = np.flipud(image)
     elif a == 1:
+        im_aug = np.flipud(image)
+    elif a == 2:
         im_aug = np.fliplr(image)
-    else:
-        im_aug = image
     return im_aug
 
 def elastic_transform(image, alpha, sigma, random_state=None):
@@ -66,22 +64,23 @@ def gaussian_noise(image, sigma):
 
 def Augmentation(image, rot=[0, 90], elast_a=[80, 120], elast_sig=[9.0 , 11.0], g_noise=[0,0.1],
                 g_blurr=[0,0.1], brigh=[0.65,1.35], contr=[0.5,1.5], HSV=0.1, HED=0.02):
-    
-    
-    
-    #### Group 1: Basic -> Rotation or Mirroring ###    
-    if random.getrandbits(1) > 0:
+       
+    #### Group 1: Basic -> Rotation or Mirroring ###
+    t = random.randint(0,2)
+    if t == 0:
         # random rotation
         im = Image.fromarray(image)
         angle = random.sample(rot, 1)        
         im = im.rotate(angle[0])
         im = np.array(im)
-    else:
+    elif t == 1:
         # random mirroring
         im = mirroring(image)
+    else:
+        im = image
     
     #### Group 2: Morphologic -> Elestic deformation,  gaussian noise or gaussian blurring ####
-    t = random.getrandbits(2)
+    t = random.randint(0,2)
     if t == 0:
         # random elastic trasform
         a = np.random.uniform(low=elast_a[0], high=elast_a[1], size=1)[0]
@@ -91,22 +90,23 @@ def Augmentation(image, rot=[0, 90], elast_a=[80, 120], elast_sig=[9.0 , 11.0], 
         # random gaussian noise
         sigma = np.random.uniform(low=g_noise[0], high=g_noise[1], size=1)[0]
         im = gaussian_noise(im, sigma)
-    elif t == 2:
-        # random gaussian blurring
-        sigma = np.random.uniform(low=g_blurr[0], high=g_blurr[1], size=1)[0]
-        im = Image.fromarray(im)
-        im = im.filter(ImageFilter.GaussianBlur(sigma))
-        im = np.array(im)
+#     elif t == 2:
+#         # random gaussian blurring
+#         sigma = np.random.uniform(low=g_blurr[0], high=g_blurr[1], size=1)[0]
+#         im = Image.fromarray(im)
+#         im = im.filter(ImageFilter.GaussianBlur(sigma))
+#         im = np.array(im)
         
     #### Group 3: Brightness or Contrast ####
-    if random.getrandbits(1) > 0:
+    t = random.randint(0,2)
+    if t == 0:
         # random brightness perturbation
         br = np.random.uniform(low=brigh[0], high=brigh[1], size=1)[0]
         im = Image.fromarray(im)
         im = ImageEnhance.Brightness(im)
         im = im.enhance(br)
         im = np.array(im)
-    else:
+    elif t == 1:
         # random contrast perturbation
         cr = np.random.uniform(low=contr[0], high=contr[1], size=1)[0]
         im = Image.fromarray(im)

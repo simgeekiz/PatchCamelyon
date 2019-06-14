@@ -13,7 +13,7 @@ from .Augmentation import Augmentation
 
 class DataGenerator(keras.utils.Sequence):
     'Generates data for Keras'
-    def __init__(self, list_IDs, data, labels, batch_size=32, aug=True, dim=(224, 224),
+    def __init__(self, list_IDs, data, labels, batch_size=32, aug=True, dim=(96, 96),
         n_channels=3, n_classes=2, shuffle=True):
         '''Initialization'''
         self.dim = dim
@@ -58,44 +58,21 @@ class DataGenerator(keras.utils.Sequence):
 
         # printing the progress
 #         print(str(int((int(list_IDs_temp[0])/len(self.list_IDs))*100)) + '%')
-        if self.aug:
-            if random.getrandbits(1) < 1 :
-                # Generate batch non-augmented
-                for i, ID in enumerate(list_IDs_temp):
-                    # preprocessing
-                    img_arr = self.data[ID]
-                    img = array_to_img(img_arr)
-                    img = img.resize((224,224), Image.ANTIALIAS)
-                    img.load()
 
-                    X[i] = np.asarray(img, dtype=np.uint8)/255
+        for i, ID in enumerate(list_IDs_temp):
+            # preprocessing
+            img_arr = self.data[ID]
+            img = array_to_img(img_arr)
+            if self.dim[0] != 96 and self.dim[1] != 96:
+                img = img.resize((self.dim, Image.ANTIALIAS))
+            img.load()
 
-                    # Store target label(one-hot-encoding)
-                    y[i] = to_categorical(self.labels[str(ID)], num_classes=self.n_classes)
-
+            if self.aug and random.randint(0,1) < 1:
+                X[i] = Augmentation(np.asarray(img, dtype=np.uint8))
             else:
-                # Generate batch augmented
-                for i, ID in enumerate(list_IDs_temp):
-                    # preprocessing
-                    img_arr = self.data[ID]
-                    img = array_to_img(img_arr)
-                    img = img.resize((224,224), Image.ANTIALIAS)
-                    img.load()
-                    X[i] = Augmentation(np.asarray(img, dtype=np.uint8))
-                    # Store target label(one-hot-encoding)
-                    y[i] = to_categorical(self.labels[str(ID)], num_classes=self.n_classes)
-
-        else:
-            # Generate batch non-augmented
-            for i, ID in enumerate(list_IDs_temp):
-                # preprocessing
-                img_arr = self.data[ID]
-                img = array_to_img(img_arr)
-                img = img.resize((224,224), Image.ANTIALIAS)
-                img.load()
-
                 X[i] = np.asarray(img, dtype=np.uint8)/255
 
-                # Store target label(one-hot-encoding)
-                y[i] = to_categorical(self.labels[str(ID)], num_classes=self.n_classes)
+            # Store target label(one-hot-encoding)
+            y[i] = to_categorical(self.labels[str(ID)], num_classes=self.n_classes)
+
         return X, y
