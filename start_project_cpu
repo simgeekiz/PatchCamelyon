@@ -13,5 +13,5 @@ pip install Pillow --user
 pip install opencv-python --user
 pip install scikit-image --user
 
-ssh -o StrictHostKeyChecking=no -f -N -p 22 -R 5113:localhost:5113 int3
+ssh -o StrictHostKeyChecking=no -f -N -p 22 -R 5114:localhost:5114 int3
 jupyter notebook --no-browser --port 5113
