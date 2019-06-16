@@ -64,7 +64,7 @@ class DataGenerator(keras.utils.Sequence):
             img_arr = self.data[ID]
             img = array_to_img(img_arr)
             if self.dim[0] != 96 and self.dim[1] != 96:
-                img = img.resize((self.dim, Image.ANTIALIAS))
+                img = img.resize((self.dim), Image.ANTIALIAS)
             img.load()
 
             if self.aug and random.randint(0,1) < 1:

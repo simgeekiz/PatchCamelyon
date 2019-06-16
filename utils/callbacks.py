@@ -131,6 +131,8 @@ class PlotCurves(Callback):
 
             # (Possibly) update best validation AUC and save the network
             if self.val_auc[-1] > self.best_val_auc:
+                with open(os.path.join(weights_dir, 'best_auc_model.txt'), 'w') as f:
+                    f.write(str(self.epoch))
                 self.best_val_auc = self.val_auc[-1]
                 self.best_auc_epoch = self.epoch
                 self.model.save_weights(os.path.join(weights_dir, self.model_name + '_best_auc_model_weights' + '_epoch_' + str(self.epoch) + '.h5'))
