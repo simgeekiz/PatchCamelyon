@@ -47,6 +47,7 @@ results/
 wide_unet_2/
 *.zip
 run-conv-keras.ipynb
+Delete/
 
 .DS_Store
 .env
