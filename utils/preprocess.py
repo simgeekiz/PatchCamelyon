@@ -68,7 +68,7 @@ class DataGenerator(keras.utils.Sequence):
             img.load()
 
             if self.aug and random.randint(0,1) < 1:
-                X[i] = Augmentation(np.asarray(img, dtype=np.uint8))
+                X[i] = Augmentation(np.asarray(img, dtype=np.uint8))/255
             else:
                 X[i] = np.asarray(img, dtype=np.uint8)/255
 

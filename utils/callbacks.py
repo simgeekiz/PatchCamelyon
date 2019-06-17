@@ -116,8 +116,6 @@ class PlotCurves(Callback):
         weights_dir = os.path.join(model_dir, 'weights')
         os.makedirs(weights_dir, exist_ok=True)
         
-        
-
         if self.weights2pickle:
             mwghts = self.model.get_weights()
             with open(os.path.join(model_dir, self.model_name + '_weights_epoch_' + str(self.epoch) + '.pkl'), 'wb') as pkl:
